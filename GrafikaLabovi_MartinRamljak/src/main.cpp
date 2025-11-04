@@ -14,7 +14,7 @@ const unsigned int SCR_HEIGHT = 600;
 
 int main()
 {
-    float offsetX = 0.5f;
+
     float offsetY = 0.3f;
     glm::vec3 color(0.0f, 1.0f, 0.7f);
 
@@ -30,6 +30,8 @@ int main()
         window.ProcessInput();
         render.Clear();
 
+        float timeValue = glfwGetTime();
+        float offsetX = (sin(timeValue) / 2.0f);
         shader.SetUniformVec2("offset", offsetX, offsetY);
         shader.SetUniformVec3("color", color);
 
