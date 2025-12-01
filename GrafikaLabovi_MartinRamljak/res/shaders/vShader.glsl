@@ -6,11 +6,14 @@ layout (location = 2) in vec2 aTexCord;
 out vec3 normal;
 out vec2 TexCord;
 
-uniform vec2 offset;
+uniform mat4 model;
+uniform mat4 view;
+uniform mat4 projection;
 
 void main()
 { 
-	gl_Position = vec4(aPos.x + offset.x, aPos.y + offset.y, aPos.z, 1.0f);
-	normal=aNorm;
-	TexCord=aTexCord;
+    gl_Position = projection * view * model * vec4(aPos, 1.0f);
+
+    normal = aNorm;
+    TexCord = aTexCord;
 }
