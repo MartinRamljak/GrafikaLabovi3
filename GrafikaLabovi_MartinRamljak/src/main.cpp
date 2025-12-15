@@ -18,9 +18,9 @@ int main()
 {
     Window window("Vjezba4", SCR_WIDTH, SCR_HEIGHT);
 
-    Model bird("res/objects/bird.obj");
-    Model dragon("res/objects/dragon.obj");
-    Model frog("res/objects/frog.obj");
+    Model kocka1("res/objects/kocka.obj");
+    Model kocka2("res/objects/kocka.obj");
+    Model kocka3("res/objects/kocka.obj");
 
     Shader shader("res/shaders/vShader.glsl", "res/shaders/fShader.glsl");
     Texture tex("res/textures/crate.png");
@@ -29,6 +29,10 @@ int main()
 
     //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
+    glm::vec3 cameraPos = glm::vec3(0.0f, 10.0f * cos(glm::radians(45.0f)), 10.0f * sin(glm::radians(45.0f)));
+    glm::vec3 lightPos(8.0f, 3.0f, 0.0f);
+    glm::vec3 lightColor(1.0f, 1.0f, 1.0f);
+
     while (!window.isClosed())
     {
         window.ProcessInput();
@@ -36,11 +40,8 @@ int main()
 
         float timeValue = glfwGetTime();
 
-        glm::vec3 initialPos = glm::vec3(3.0f, 2.0f, 5.0f);
-        glm::vec3 finalPos = glm::mat3(1.0f, 0.0f, 0.0f, 0.0f, cos(timeValue), -sin(timeValue), 0.0f, sin(timeValue), cos(timeValue)) * initialPos;
-
         glm::mat4 view = glm::lookAt(
-            initialPos,
+            cameraPos,
             glm::vec3(0.0f, 0.0f, 0.0f),
             glm::vec3(0.0f, 1.0f, 0.0f)
         );
@@ -58,21 +59,30 @@ int main()
         shader.SetUniform4x4("view", view);
         shader.SetUniform4x4("projection", projection);
 
-        glm::mat4 modelBird = glm::translate(glm::mat4(1.0f), glm::vec3(-3.0f, 0.0f, 0.0f));
-        modelBird = glm::rotate(modelBird, glm::radians(50 * timeValue), glm::vec3(1.0f, 0.0f, 0.0f));
-        shader.SetUniform4x4("model", modelBird);
-        bird.Draw(shader, tex);
+        shader.SetUniformVec3("lightColor", lightColor);
+        shader.SetUniformVec3("lightPos", lightPos);
+        shader.SetUniformVec3("viewPos", cameraPos);
 
-        glm::mat4 modelDragon = glm::mat4(1.0f);
-        modelDragon = glm::rotate(modelDragon, glm::radians(50 * timeValue), glm::vec3(0.0f, 1.0f, 0.0f));
-        shader.SetUniform4x4("model", modelDragon);
-        dragon.Draw(shader, tex);
+        shader.SetUniformVec3("objectColor", 1.0f, 0.0f, 0.0f);
+        glm::mat4 modelKocka1 = glm::translate(glm::mat4(1.0f), glm::vec3(-3.5f, 0.0f, 0.0f));
+        shader.SetUniform4x4("model", modelKocka1);
+        kocka1.Draw(shader, tex);
 
-        glm::mat4 modelFrog = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, -3.0f));
-        modelFrog = glm::scale(modelFrog, glm::vec3(0.2f));
-        modelFrog = glm::rotate(modelFrog, glm::radians(50 * timeValue), glm::vec3(0.0f, 0.0f, 1.0f));
-        shader.SetUniform4x4("model", modelFrog);
-        frog.Draw(shader, tex);
+        shader.SetUniformVec3("objectColor", 0.0f, 1.0f, 0.0f);
+        glm::mat4 modelKocka2 = glm::translate(glm::mat4(1.0f), glm::vec3(-0.5f, 0.0f, 0.0f));
+        shader.SetUniform4x4("model", modelKocka2);
+        kocka2.Draw(shader, tex);
+
+        shader.SetUniformVec3("objectColor", 0.0f, 0.0f, 1.0f);
+        glm::mat4 modelKocka3 = glm::translate(glm::mat4(1.0f), glm::vec3(2.5f, 0.0f, 0.0f));
+        shader.SetUniform4x4("model", modelKocka3);
+        kocka3.Draw(shader, tex);
+
+        shader.SetUniformVec3("lightColor", 1.0f, 1.0f, 1.0f);
+        shader.SetUniformVec3("lightPos", lightPos);
+
+        lightPos.x = 5.0f + 3.0f * cos(timeValue);
+        lightPos.z = 3.0f * sin(timeValue);
 
         window.SwapAndPoll();
     }
