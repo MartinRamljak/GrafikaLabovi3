@@ -18,9 +18,9 @@ int main()
 {
     Window window("Vjezba4", SCR_WIDTH, SCR_HEIGHT);
 
-    Model kocka1("res/objects/kocka.obj");
+    Model kocka1("res/objects/dragon.obj");
     Model kocka2("res/objects/kocka.obj");
-    Model kocka3("res/objects/kocka.obj");
+    Model kocka3("res/objects/bird.obj");
 
     Shader shader("res/shaders/vShader.glsl", "res/shaders/fShader.glsl");
     Texture tex("res/textures/crate.png");
@@ -31,7 +31,6 @@ int main()
 
     glm::vec3 cameraPos = glm::vec3(0.0f, 10.0f * cos(glm::radians(45.0f)), 10.0f * sin(glm::radians(45.0f)));
     glm::vec3 lightPos(8.0f, 3.0f, 0.0f);
-    glm::vec3 lightColor(1.0f, 1.0f, 1.0f);
 
     while (!window.isClosed())
     {
@@ -45,6 +44,8 @@ int main()
             glm::vec3(0.0f, 0.0f, 0.0f),
             glm::vec3(0.0f, 1.0f, 0.0f)
         );
+
+        glm::vec3 lightColor(cos(glm::radians(100 * timeValue)), sin(glm::radians(100 * timeValue)), 0.0f);
 
         // Perspective:
          glm::mat4 projection = glm::perspective(glm::radians(45.0f),
@@ -73,7 +74,7 @@ int main()
         shader.SetUniform4x4("model", modelKocka2);
         kocka2.Draw(shader, tex);
 
-        shader.SetUniformVec3("objectColor", 0.0f, 0.0f, 1.0f);
+        shader.SetUniformVec3("objectColor", 0.0f, 0.2f, 1.0f);
         glm::mat4 modelKocka3 = glm::translate(glm::mat4(1.0f), glm::vec3(2.5f, 0.0f, 0.0f));
         shader.SetUniform4x4("model", modelKocka3);
         kocka3.Draw(shader, tex);
